@@ -15,128 +15,278 @@
       padding: 40px 16px 80px;
     }
     .card {
-      background: #ffffff;
+      background: #fff;
       border-radius: 16px;
-      max-width: 640px;
+      max-width: 600px;
       margin: 0 auto;
       padding: 40px 32px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.08);
     }
-    h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 8px; }
-    .app-name { color: #0071e3; }
-    .subtitle { color: #6e6e73; font-size: 0.95rem; margin-bottom: 32px; }
-    h2 { font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; }
-    p { margin-bottom: 12px; color: #3a3a3c; }
-    ul { padding-left: 20px; margin-bottom: 12px; color: #3a3a3c; }
-    ul li { margin-bottom: 6px; }
-    .steps { counter-reset: step; padding-left: 0; list-style: none; }
-    .steps li {
-      counter-increment: step;
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      margin-bottom: 16px;
-    }
-    .steps li::before {
-      content: counter(step);
-      min-width: 28px;
-      height: 28px;
-      background: #0071e3;
-      color: #fff;
-      border-radius: 50%;
-      display: flex;
+    h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 4px; }
+    .app-label { color: #0071e3; font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+    .subtitle { color: #6e6e73; font-size: 0.95rem; margin-bottom: 28px; }
+    h2 { font-size: 1rem; font-weight: 600; margin: 24px 0 8px; }
+    p { margin-bottom: 10px; color: #3a3a3c; font-size: 0.95rem; }
+    ul { padding-left: 20px; margin-bottom: 10px; color: #3a3a3c; font-size: 0.95rem; }
+    ul li { margin-bottom: 5px; }
+    .deleted-list li { color: #dc2626; }
+    .retained-list li { color: #16a34a; }
+    a { color: #0071e3; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Sections ── */
+    #section-info   { }
+    #section-signin { display: none; }
+    #section-confirm{ display: none; }
+    #section-done   { display: none; }
+    #section-error  { display: none; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.85rem;
-      font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 2px;
+      gap: 10px;
+      width: 100%;
+      padding: 13px 20px;
+      border-radius: 980px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity .15s;
     }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-google { background: #fff; color: #3c4043; border: 1.5px solid #dadce0; }
+    .btn-google:hover:not(:disabled) { background: #f8f9fa; }
+    .btn-google svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .btn-danger  { background: #dc2626; color: #fff; margin-top: 16px; }
+    .btn-danger:hover:not(:disabled) { background: #b91c1c; }
+    .btn-cancel  { background: #e5e7eb; color: #374151; margin-top: 8px; }
+    .btn-cancel:hover:not(:disabled) { background: #d1d5db; }
+
+    /* ── Warning box ── */
     .warning {
       background: #fff3cd;
       border-left: 4px solid #f59e0b;
       border-radius: 8px;
       padding: 14px 16px;
-      margin: 24px 0;
+      margin: 20px 0;
       color: #78350f;
       font-size: 0.9rem;
     }
-    .deleted-list li { color: #dc2626; }
-    .retained-list li { color: #16a34a; }
-    a { color: #0071e3; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .email-button {
-      display: inline-block;
-      background: #0071e3;
-      color: #fff;
-      padding: 12px 28px;
-      border-radius: 980px;
-      font-size: 1rem;
-      font-weight: 600;
-      margin-top: 8px;
-      text-decoration: none;
+    .success-box {
+      background: #dcfce7;
+      border-left: 4px solid #16a34a;
+      border-radius: 8px;
+      padding: 16px;
+      color: #14532d;
+      font-size: 0.95rem;
     }
-    .email-button:hover { background: #0077ed; text-decoration: none; }
+    .error-box {
+      background: #fee2e2;
+      border-left: 4px solid #dc2626;
+      border-radius: 8px;
+      padding: 16px;
+      color: #7f1d1d;
+      font-size: 0.9rem;
+      margin-top: 16px;
+    }
+    .signed-in-as {
+      font-size: 0.85rem;
+      color: #6e6e73;
+      margin-bottom: 16px;
+      word-break: break-all;
+    }
+    .spinner {
+      display: inline-block;
+      width: 18px; height: 18px;
+      border: 3px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
     footer { text-align: center; color: #6e6e73; font-size: 0.8rem; margin-top: 40px; }
   </style>
 </head>
 <body>
 
-  <div class="card">
+<!-- ════════════════════════════════════════
+     SECTION 1 — Info + "Proceed" button
+════════════════════════════════════════ -->
+<div class="card" id="section-info">
+  <h1>Delete Your Account</h1>
+  <p class="app-label">ToDo Notification List</p>
+  <p class="subtitle">Permanently delete your account and all associated data.</p>
 
-    <h1>Delete Your Account</h1>
-    <p class="app-name" style="font-size:1rem;font-weight:600;margin-bottom:4px;">ToDo Notification List</p>
-    <p class="subtitle">You can request the permanent deletion of your account and all associated data at any time.</p>
+  <h2>What will be deleted</h2>
+  <ul class="deleted-list">
+    <li>Your account and authentication credentials</li>
+    <li>All recurring notifications you have created</li>
+    <li>Your device push notification tokens</li>
+    <li>Your subscription and purchase verification records</li>
+    <li>Any feedback messages you have submitted</li>
+  </ul>
 
-    <!-- How to request deletion -->
-    <h2>How to request account deletion</h2>
-    <p>Send an email to the address below with the subject line <strong>"Delete My Account"</strong>. We will process your request and confirm deletion within <strong>7 days</strong>.</p>
+  <h2>What is retained</h2>
+  <ul class="retained-list">
+    <li>Nothing — all data is permanently deleted immediately</li>
+  </ul>
 
-    <a class="email-button" href="mailto:todonotificationlist@gmail.com?subject=Delete%20My%20Account">
-      Email Us to Delete Account
-    </a>
+  <h2>Active subscriptions</h2>
+  <p>Deleting your account does <strong>not</strong> cancel your subscription. Cancel it separately before proceeding:</p>
+  <ul>
+    <li><a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play → Subscriptions</a></li>
+    <li><a href="https://apps.apple.com/account/subscriptions" target="_blank" rel="noopener">App Store → Subscriptions</a></li>
+  </ul>
 
-    <div class="warning">
-      ⚠️ This action is <strong>permanent and irreversible</strong>. All your data will be deleted and cannot be recovered.
-    </div>
-
-    <!-- What gets deleted -->
-    <h2>Data that will be permanently deleted</h2>
-    <ul class="deleted-list">
-      <li>Your Firebase account and authentication credentials</li>
-      <li>All recurring notifications you have created</li>
-      <li>Your device push notification tokens (FCM / APNs)</li>
-      <li>Your subscription and purchase verification records</li>
-      <li>Any feedback messages you have submitted</li>
-    </ul>
-
-    <!-- What is retained -->
-    <h2>Data that is retained</h2>
-    <ul class="retained-list">
-      <li>None — all data associated with your account is fully deleted</li>
-    </ul>
-
-    <!-- Retention period -->
-    <h2>Retention period</h2>
-    <p>All data is deleted immediately upon processing your request. No backups or archives of your personal data are retained after deletion.</p>
-
-    <!-- Subscription note -->
-    <h2>Active subscriptions</h2>
-    <p>Deleting your account does <strong>not</strong> automatically cancel an active Google Play or App Store subscription. To avoid future charges, please cancel your subscription separately through:</p>
-    <ul>
-      <li><a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play → Subscriptions</a></li>
-      <li><a href="https://apps.apple.com/account/subscriptions" target="_blank" rel="noopener">App Store → Subscriptions</a></li>
-    </ul>
-
+  <div class="warning">
+    ⚠️ This action is <strong>permanent and irreversible</strong>. Your data cannot be recovered after deletion.
   </div>
 
-  <footer>
-    <p>© <span id="year"></span> ToDo Notification List. All rights reserved.</p>
-  </footer>
+  <button class="btn btn-google" id="btn-proceed">
+    <svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+    Sign in with Google to continue
+  </button>
+</div>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+<!-- ════════════════════════════════════════
+     SECTION 2 — Signed in, confirm deletion
+════════════════════════════════════════ -->
+<div class="card" id="section-confirm">
+  <h1>Confirm Deletion</h1>
+  <p class="subtitle">You are about to permanently delete your account.</p>
+  <p class="signed-in-as">Signed in as: <strong id="display-email"></strong></p>
+
+  <div class="warning">
+    ⚠️ All your notifications, subscription records, and account data will be <strong>permanently deleted</strong>. This cannot be undone.
+  </div>
+
+  <button class="btn btn-danger" id="btn-delete">Delete My Account Permanently</button>
+  <button class="btn btn-cancel" id="btn-cancel">Cancel</button>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 3 — Success
+════════════════════════════════════════ -->
+<div class="card" id="section-done">
+  <h1>Account Deleted</h1>
+  <br/>
+  <div class="success-box">
+    ✅ Your account and all associated data have been permanently deleted.
+    <br/><br/>
+    If you had an active subscription, please cancel it via
+    <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play</a> or
+    <a href="https://apps.apple.com/account/subscriptions" target="_blank" rel="noopener">App Store</a>
+    to avoid future charges.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 4 — Error fallback
+════════════════════════════════════════ -->
+<div class="card" id="section-error">
+  <h1>Something went wrong</h1>
+  <p style="margin-top:12px;">We were unable to delete your account automatically. Please contact us and we will process your request within 7 days.</p>
+  <br/>
+  <a href="mailto:todonotificationlist@gmail.com?subject=Delete%20My%20Account" class="btn btn-google" style="text-decoration:none;">
+    Email Us to Delete Account
+  </a>
+  <div class="error-box" id="error-detail"></div>
+</div>
+
+<footer>
+  <p>© <span id="year"></span> ToDo Notification List. All rights reserved.</p>
+</footer>
+
+<!-- ════════════════════════════════════════
+     Firebase JS SDK (compat)
+════════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ── Firebase config ──────────────────────────────────────────────
+  const firebaseConfig = {
+    apiKey:            "AIzaSyAHVGD5u_cpwJ8BOsD77UP_QuMLL7wc1sM",
+    authDomain:        "todo-notification-list.firebaseapp.com",
+    projectId:         "todo-notification-list",
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const provider = new firebase.auth.GoogleAuthProvider();
+
+  const DELETE_ACCOUNT_URL =
+    "https://us-central1-todo-notification-list.cloudfunctions.net/deleteAccount";
+
+  // ── Section helpers ──────────────────────────────────────────────
+  const sections = ['info','confirm','done','error'];
+  function show(name) {
+    sections.forEach(s =>
+      document.getElementById('section-' + s).style.display = s === name ? '' : 'none'
+    );
+  }
+
+  // ── Step 1: Sign in with Google ──────────────────────────────────
+  document.getElementById('btn-proceed').addEventListener('click', async () => {
+    try {
+      const result = await auth.signInWithPopup(provider);
+      const email = result.user.email || result.user.uid;
+      document.getElementById('display-email').textContent = email;
+      show('confirm');
+    } catch (err) {
+      showError('Sign-in failed: ' + err.message);
+    }
+  });
+
+  // ── Step 2: Cancel ───────────────────────────────────────────────
+  document.getElementById('btn-cancel').addEventListener('click', () => {
+    auth.signOut();
+    show('info');
+  });
+
+  // ── Step 3: Confirm deletion ─────────────────────────────────────
+  document.getElementById('btn-delete').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-delete');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Deleting…';
+
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error('No signed-in user found. Please refresh and try again.');
+
+      const idToken = await user.getIdToken();
+
+      const response = await fetch(DELETE_ACCOUNT_URL, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + idToken }
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error('Server error (' + response.status + '): ' + text);
+      }
+
+      await auth.signOut();
+      show('done');
+
+    } catch (err) {
+      showError(err.message);
+      btn.disabled = false;
+      btn.textContent = 'Delete My Account Permanently';
+    }
+  });
+
+  // ── Error helper ─────────────────────────────────────────────────
+  function showError(msg) {
+    document.getElementById('error-detail').textContent = msg;
+    show('error');
+  }
+</script>
 
 </body>
 </html>
